@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Admin Login' if is_admin else 'Login' }} - QuizMaster{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card">
+        <h1>{{ 'Admin Login' if is_admin else 'Welcome Back' }}</h1>
+        <p class="auth-subtitle">
+            {{ 'Sign in with your admin account.' if is_admin else 'Login to continue your quiz journey.' }}
+        </p>
+
+        <form method="POST" action="{{ url_for('admin_login') if is_admin else url_for('login') }}" class="auth-form">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autofocus placeholder="Enter your username">
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Enter your password">
+
+            <button type="submit" class="btn btn-primary btn-block">
+                {{ 'Login as Admin' if is_admin else 'Login' }}
+            </button>
+        </form>
+
+        {% if not is_admin %}
+            <p class="auth-footer">Don't have an account? <a href="{{ url_for('register') }}">Sign up</a></p>
+            <p class="auth-footer"><a href="{{ url_for('admin_login') }}">Admin login &rarr;</a></p>
+        {% else %}
+            <p class="auth-footer"><a href="{{ url_for('login') }}">&larr; Back to user login</a></p>
+            <p class="auth-hint">Default admin: <code>admin</code> / <code>admin123</code></p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

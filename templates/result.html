@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Quiz Result - QuizMaster{% endblock %}
+
+{% block content %}
+<section class="result-section">
+    <div class="result-card">
+        <div class="result-ring
+            {% if percent >= 80 %}ring-great
+            {% elif percent >= 50 %}ring-good
+            {% else %}ring-low{% endif %}">
+            <span>{{ percent }}%</span>
+        </div>
+
+        <h1>
+            {% if percent >= 80 %}Excellent Work! 🎉
+            {% elif percent >= 50 %}Good Effort! 👍
+            {% else %}Keep Practicing! 💪
+            {% endif %}
+        </h1>
+
+        <p class="result-summary">
+            You scored <strong>{{ result.score }}</strong> out of
+            <strong>{{ result.total_questions }}</strong> in the
+            <strong>{{ result.category }}</strong> quiz.
+        </p>
+
+        <div class="result-meta">
+            <div><span>Category</span><strong>{{ result.category }}</strong></div>
+            <div><span>Score</span><strong>{{ result.score }}/{{ result.total_questions }}</strong></div>
+            <div><span>Time Taken</span><strong>{{ (result.time_taken // 60) }}m {{ (result.time_taken % 60) }}s</strong></div>
+            <div><span>Date</span><strong>{{ result.date_taken }}</strong></div>
+        </div>
+
+        <div class="result-actions">
+            <a href="{{ url_for('quiz', category=result.category) }}" class="btn btn-primary">Retake Quiz</a>
+            <a href="{{ url_for('leaderboard') }}?category={{ result.category }}" class="btn btn-outline">View Leaderboard</a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline">Back to Dashboard</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

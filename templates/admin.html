@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel - QuizMaster{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>⚙️ Admin Panel</h1>
+    <p>Manage questions and users across QuizMaster.</p>
+</section>
+
+<div class="admin-tabs">
+    <button class="tab-btn active" data-tab="addQuestion">Add Question</button>
+    <button class="tab-btn" data-tab="manageQuestions">Manage Questions ({{ questions|length }})</button>
+    <button class="tab-btn" data-tab="manageUsers">View Users ({{ users|length }})</button>
+</div>
+
+<div id="addQuestion" class="tab-panel active">
+    <form method="POST" action="{{ url_for('admin_add_question') }}" class="admin-form">
+        <div class="form-grid">
+            <div class="form-field">
+                <label for="category">Category</label>
+                <select name="category" id="category" required>
+                    {% for cat in categories %}
+                    <option value="{{ cat }}">{{ cat }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="difficulty">Difficulty</label>
+                <select name="difficulty" id="difficulty">
+                    <option value="Easy">Easy</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label for="question_text">Question</label>
+            <textarea name="question_text" id="question_text" rows="2" required placeholder="Enter the question text"></textarea>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-field">
+                <label for="option_a">Option A</label>
+                <input type="text" name="option_a" id="option_a" required>
+            </div>
+            <div class="form-field">
+                <label for="option_b">Option B</label>
+                <input type="text" name="option_b" id="option_b" required>
+            </div>
+            <div class="form-field">
+                <label for="option_c">Option C</label>
+                <input type="text" name="option_c" id="option_c" required>
+            </div>
+            <div class="form-field">
+                <label for="option_d">Option D</label>
+                <input type="text" name="option_d" id="option_d" required>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label for="correct_option">Correct Option</label>
+            <select name="correct_option" id="correct_option" required>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Question</button>
+    </form>
+</div>
+
+<div id="manageQuestions" class="tab-panel">
+    <div class="admin-table-wrapper">
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Category</th>
+                    <th>Question</th>
+                    <th>Correct</th>
+                    <th>Difficulty</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for q in questions %}
+                <tr>
+                    <td>{{ q.id }}</td>
+                    <td>{{ q.category }}</td>
+                    <td class="truncate-cell">{{ q.question_text }}</td>
+                    <td>{{ q.correct_option }}</td>
+                    <td>{{ q.difficulty }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin_delete_question', question_id=q.id) }}"
+                              onsubmit="return confirm('Delete this question?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="manageUsers" class="tab-panel">
+    <div class="admin-table-wrapper">
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Joined</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ 'Admin' if u.is_admin else 'User' }}</td>
+                    <td>{{ u.created_at }}</td>
+                    <td>
+                        {% if not u.is_admin %}
+                        <form method="POST" action="{{ url_for('admin_delete_user', user_id=u.id) }}"
+                              onsubmit="return confirm('Delete this user?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                        {% else %}
+                        <span class="muted">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

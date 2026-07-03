@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Profile - QuizMaster{% endblock %}
+
+{% block content %}
+<section class="profile-section">
+    <div class="profile-card">
+        <div class="profile-avatar">{{ user.username[0] | upper }}</div>
+        <div>
+            <h1>{{ user.username }}</h1>
+            <p>{{ user.email }}</p>
+            <p class="muted">Member since {{ user.created_at }}</p>
+        </div>
+    </div>
+
+    <div class="stats-row">
+        <div class="stat-box">
+            <span class="stat-value">{{ stats.attempts }}</span>
+            <span class="stat-label">Quizzes Taken</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-value">{{ stats.avg_percent | round(1) }}%</span>
+            <span class="stat-label">Average Score</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-value">{{ stats.best_percent | round(1) }}%</span>
+            <span class="stat-label">Best Score</span>
+        </div>
+    </div>
+
+    <h2>Quiz History</h2>
+    {% if results %}
+    <table class="leaderboard-table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Score</th>
+                <th>Percentage</th>
+                <th>Time Taken</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in results %}
+            <tr>
+                <td>{{ r.category }}</td>
+                <td>{{ r.score }}/{{ r.total_questions }}</td>
+                <td>{{ ((r.score / r.total_questions) * 100) | round(1) }}%</td>
+                <td>{{ (r.time_taken // 60) }}m {{ (r.time_taken % 60) }}s</td>
+                <td>{{ r.date_taken }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">You haven't taken any quizzes yet. <a href="{{ url_for('dashboard') }}">Start one now &rarr;</a></p>
+    {% endif %}
+</section>
+{% endblock %}

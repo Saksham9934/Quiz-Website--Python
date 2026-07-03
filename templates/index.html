@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}QuizMaster - Test Your Knowledge{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-text">
+        <h1>Sharpen your skills.<br>Prove your knowledge.</h1>
+        <p>Timed quizzes on HTML, CSS, JavaScript, Python, DBMS &amp; DSA —
+           built for students and professionals who want to test themselves
+           the way top companies and colleges do.</p>
+        <div class="hero-actions">
+            {% if logged_in_user %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+            {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="hero-graphic" aria-hidden="true">
+        <div class="hero-card">🧠</div>
+        <div class="hero-card">⏱️</div>
+        <div class="hero-card">🏆</div>
+    </div>
+</section>
+
+<section class="features">
+    <h2>Categories you can master</h2>
+    <div class="category-grid">
+        {% for cat in categories_list %}
+        <div class="category-chip">{{ cat }}</div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="features">
+    <h2>Why QuizMaster</h2>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <h3>⏱️ Timed Quizzes</h3>
+            <p>Every quiz runs on a countdown timer with auto-submit, just like real assessments.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🔀 Randomized Questions</h3>
+            <p>Questions are shuffled from a growing question bank so no two attempts feel the same.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🏆 Leaderboard</h3>
+            <p>Compete with others and track your rank on the global leaderboard.</p>
+        </div>
+        <div class="feature-card">
+            <h3>📊 Personal Profile</h3>
+            <p>Review your quiz history, best scores and progress at a glance.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

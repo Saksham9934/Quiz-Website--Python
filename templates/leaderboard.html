@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard - QuizMaster{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>🏆 Leaderboard</h1>
+    <p>See how you stack up against other QuizMaster users.</p>
+</section>
+
+<section class="filter-row">
+    <a href="{{ url_for('leaderboard') }}" class="filter-chip {% if not selected_category %}active{% endif %}">Overall</a>
+    {% for cat in categories_list %}
+        <a href="{{ url_for('leaderboard') }}?category={{ cat }}"
+           class="filter-chip {% if selected_category == cat %}active{% endif %}">{{ cat }}</a>
+    {% endfor %}
+</section>
+
+<section class="leaderboard-table-wrapper">
+    {% if rows %}
+    <table class="leaderboard-table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>User</th>
+                {% if selected_category %}
+                    <th>Best Score</th>
+                    <th>Best %</th>
+                    <th>Fastest Time</th>
+                {% else %}
+                    <th>Attempts</th>
+                    <th>Average %</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr class="{% if logged_in_user and row.username == logged_in_user.username %}highlight-row{% endif %}">
+                <td>
+                    {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}
+                </td>
+                <td>{{ row.username }}</td>
+                {% if selected_category %}
+                    <td>{{ row.best_score }}/{{ row.total_questions }}</td>
+                    <td>{{ row.best_percent | round(1) }}%</td>
+                    <td>{{ row.best_time }}s</td>
+                {% else %}
+                    <td>{{ row.attempts }}</td>
+                    <td>{{ row.best_percent | round(1) }}%</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">No quiz attempts yet. Be the first to set a record!</p>
+    {% endif %}
+</section>
+{% endblock %}

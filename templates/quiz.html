@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ category }} Quiz - QuizMaster{% endblock %}
+
+{% block content %}
+<section class="quiz-wrapper" id="quizWrapper" data-category="{{ category }}" data-total-seconds="{{ total_seconds }}">
+
+    <div class="quiz-topbar">
+        <div class="quiz-info">
+            <h2>{{ category }} Quiz</h2>
+            <span id="questionCounter">Question 1 of 10</span>
+        </div>
+        <div class="timer-box">
+            <span class="timer-icon">⏱️</span>
+            <span id="timerDisplay">--:--</span>
+        </div>
+    </div>
+
+    <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div id="loadingState" class="loading-state">
+        <p>Loading questions...</p>
+    </div>
+
+    <div id="quizBody" class="quiz-body" style="display:none;">
+        <div class="question-panel">
+            <h3 id="questionText">Question text</h3>
+            <div class="options-list" id="optionsList"></div>
+        </div>
+
+        <div class="quiz-nav">
+            <button id="prevBtn" class="btn btn-outline" type="button">&larr; Previous</button>
+            <div class="question-jump" id="questionJump"></div>
+            <button id="nextBtn" class="btn btn-primary" type="button">Next &rarr;</button>
+        </div>
+
+        <div class="quiz-submit-row">
+            <button id="submitBtn" class="btn btn-success" type="button">Submit Quiz</button>
+        </div>
+    </div>
+
+</section>
+
+<div id="confirmModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>Submit Quiz?</h3>
+        <p id="confirmModalText">You have answered <span id="answeredCount">0</span> of <span id="totalCount">0</span> questions.</p>
+        <div class="modal-actions">
+            <button id="cancelSubmit" class="btn btn-outline" type="button">Cancel</button>
+            <button id="confirmSubmit" class="btn btn-success" type="button">Yes, Submit</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %}
